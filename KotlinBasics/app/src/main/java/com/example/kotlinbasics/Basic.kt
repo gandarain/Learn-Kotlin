@@ -207,10 +207,53 @@ fun main(){
     // Do while is better than while
     println("\n" + red + "Do While Loop" + reset)
     println(red + "Do while is better than while" + reset)
+
     value = 1
     do {
         print("$value, ")
         value++
     } while (value <= 10)
     println("\nDo while loop is done")
+
+    // For loops
+    println("\n" + red + "For loops" + reset)
+
+    for (num in 1..10){
+        print("$num, ")
+    }
+    println()
+
+    for (i in 1 until 10){
+        print("$i, ")
+    }
+    println()
+
+    // for (i in 10.downTo(1).step(2))
+    for (i in 10 downTo 1 step 2){
+        print("$i, ")
+    }
+    println()
+
+    // Write a for loop that runs from 0 to 10000
+    // Once it's at 9001 it should write "IT'S OVER 9000!!!"
+    for (num in 1..10000){
+        if (num == 9001) print("IT'S OVER 9000!!! $num")
+    }
+
+    // Write a while loop that checks the humidity (not the humidityLevel).
+    // The variable humidityLevel starts at 80. The variable humidity is initialized with "humid".
+    // If it is "humid" then it should reduce the "humidityLevel" by 5 and print "humidity decreased"
+    // Once the humidityLevel is below 60 it should print "it's comfy now" and set the humidity to "comfy"
+    var humidity = "humid"
+    var humidityLevel = 80
+
+    do {
+        humidityLevel -= 5
+        println("humidity decreased")
+
+        if (humidityLevel < 60) {
+            println("it's comfy now")
+            humidity = "comfy"
+        }
+    } while (humidity == "humid")
 }
