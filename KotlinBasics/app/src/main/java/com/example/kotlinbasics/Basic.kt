@@ -215,6 +215,8 @@ fun main(){
     } while (value <= 10)
     println("\nDo while loop is done")
 
+
+
     // For loops
     println("\n" + red + "For loops" + reset)
 
@@ -256,4 +258,79 @@ fun main(){
             humidity = "comfy"
         }
     } while (humidity == "humid")
+
+
+
+    // Break & Continue
+    println("\n" + red + "Break & Continue" + reset)
+
+    for(i in 1..20){
+        print("$i ,")
+        if (i/2 == 5){
+            break
+        }
+    }
+    println("Done with the loop")
+
+    for(i in 1..20){
+        // 11/2 ==> 5.5 but because its int so the result is 5
+        if (i/2 == 5){
+            continue
+        }
+        print("$i ,")
+    }
+    println("Done with the loop")
+
+
+
+    // Function
+    println("\n" + red + "Function" + reset)
+    myFunction()
+    var res = addUp(1, 2)
+    println("Res $res")
+
+    var resAvg = average(5.0, 4.1)
+    println("Avg $resAvg")
+
+
+
+    // Nullable
+    println("\n" + red + "Nullable" + reset)
+
+    var basicName = "John"
+    var nullAbleName: String? = "Adam"
+    nullAbleName = null
+
+    var len1 = basicName.length
+    var len2 = nullAbleName?.length
+    println("len1 $len1")
+    // println("len2 $len2")
+    nullAbleName?.let {println("len2 $len2")}
+
+
+    // Elvis operator & Not null assertion
+    // ?: => Elvis operator
+    // !! => null assertion
+    println("\n" + red + "Elvis operator & Not null assertion" + reset)
+    println(red + "?: => Elvis operator" + reset)
+    println(red + "!! => null assertion" + reset)
+    val naming = nullAbleName ?: "Guest"
+    println("Naming $naming")
+
+    // var nullValue: String? = null
+    var nullValue: String = "Value"
+    println("${nullValue!!.toLowerCase()}")
+}
+
+fun myFunction(){
+    println("Called from my function")
+}
+
+// Function with parameter
+fun addUp(a: Int, b: Int): Int{
+    return a + b
+}
+
+fun average(a: Double, b: Double): Double {
+    return (a+b) / 2
 }
