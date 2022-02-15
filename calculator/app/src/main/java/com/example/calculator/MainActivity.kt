@@ -62,9 +62,9 @@ class MainActivity : AppCompatActivity() {
                 if (tvValue.contains("-")) {
                     var splitString = tvValue.split("-")
                     // 99-1
-                    /// [99, -, 1]
+                    /// [99, 1]
                     var firstValue = splitString[0]
-                    var secondValue = splitString[2]
+                    var secondValue = splitString[1]
 
                     if (prefix.isNotEmpty()) {
                         firstValue = prefix + firstValue
@@ -73,31 +73,33 @@ class MainActivity : AppCompatActivity() {
                 } else if(tvValue.contains("+")) {
                     var splitString = tvValue.split("+")
                     // 99-1
-                    /// [99, -, 1]
+                    /// [99, 1]
                     var firstValue = splitString[0]
-                    var secondValue = splitString[2]
+                    var secondValue = splitString[1]
 
                     if (prefix.isNotEmpty()) {
                         firstValue = prefix + firstValue
                     }
+
                     tvInput?.text = removeZeroAfterDot((firstValue.toDouble() + secondValue.toDouble()).toString())
                 } else if(tvValue.contains("/")) {
                     var splitString = tvValue.split("/")
                     // 99-1
-                    /// [99, -, 1]
+                    /// [99, 1]
                     var firstValue = splitString[0]
-                    var secondValue = splitString[2]
+                    var secondValue = splitString[1]
 
                     if (prefix.isNotEmpty()) {
                         firstValue = prefix + firstValue
                     }
+
                     tvInput?.text = removeZeroAfterDot((firstValue.toDouble() / secondValue.toDouble()).toString())
                 } else if(tvValue.contains("*")) {
                     var splitString = tvValue.split("*")
                     // 99-1
-                    /// [99, -, 1]
+                    /// [99, 1]
                     var firstValue = splitString[0]
-                    var secondValue = splitString[2]
+                    var secondValue = splitString[1]
 
                     if (prefix.isNotEmpty()) {
                         firstValue = prefix + firstValue
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun removeZeroAfterDot(result: String): String {
-        var value = result
+        var value: String = result
 
         if (value.contains(".0")) {
             // 99.0 ==> 99
