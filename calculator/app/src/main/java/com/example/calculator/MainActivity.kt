@@ -69,12 +69,56 @@ class MainActivity : AppCompatActivity() {
                     if (prefix.isNotEmpty()) {
                         firstValue = prefix + firstValue
                     }
-                    tvInput?.text = (firstValue.toDouble() - secondValue.toDouble()).toString()
+                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() - secondValue.toDouble()).toString())
+                } else if(tvValue.contains("+")) {
+                    var splitString = tvValue.split("+")
+                    // 99-1
+                    /// [99, -, 1]
+                    var firstValue = splitString[0]
+                    var secondValue = splitString[2]
+
+                    if (prefix.isNotEmpty()) {
+                        firstValue = prefix + firstValue
+                    }
+                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() + secondValue.toDouble()).toString())
+                } else if(tvValue.contains("/")) {
+                    var splitString = tvValue.split("/")
+                    // 99-1
+                    /// [99, -, 1]
+                    var firstValue = splitString[0]
+                    var secondValue = splitString[2]
+
+                    if (prefix.isNotEmpty()) {
+                        firstValue = prefix + firstValue
+                    }
+                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() / secondValue.toDouble()).toString())
+                } else if(tvValue.contains("*")) {
+                    var splitString = tvValue.split("*")
+                    // 99-1
+                    /// [99, -, 1]
+                    var firstValue = splitString[0]
+                    var secondValue = splitString[2]
+
+                    if (prefix.isNotEmpty()) {
+                        firstValue = prefix + firstValue
+                    }
+                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() * secondValue.toDouble()).toString())
                 }
             } catch (e: ArithmeticException) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun removeZeroAfterDot(result: String): String {
+        var value = result
+
+        if (value.contains(".0")) {
+            // 99.0 ==> 99
+            value = result.substring(0, value.length - 2)
+        }
+
+        return value
     }
 
     private fun isOperatorAdded(value: String): Boolean {
