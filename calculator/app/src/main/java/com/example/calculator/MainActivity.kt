@@ -59,52 +59,60 @@ class MainActivity : AppCompatActivity() {
                     tvValue.substring(1)
                 }
 
-                if (tvValue.contains("-")) {
-                    var splitString = tvValue.split("-")
-                    // 99-1
-                    /// [99, 1]
-                    var firstValue = splitString[0]
-                    var secondValue = splitString[1]
+                when {
+                    tvValue.contains("-") -> {
+                        val splitString = tvValue.split("-")
+                        // 99-1
+                        /// [99, 1]
+                        var firstValue = splitString[0]
+                        val secondValue = splitString[1]
 
-                    if (prefix.isNotEmpty()) {
-                        firstValue = prefix + firstValue
-                    }
-                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() - secondValue.toDouble()).toString())
-                } else if(tvValue.contains("+")) {
-                    var splitString = tvValue.split("+")
-                    // 99-1
-                    /// [99, 1]
-                    var firstValue = splitString[0]
-                    var secondValue = splitString[1]
-
-                    if (prefix.isNotEmpty()) {
-                        firstValue = prefix + firstValue
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+                        tvInput?.text = removeZeroAfterDot((firstValue.toDouble() - secondValue.toDouble()).toString())
                     }
 
-                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() + secondValue.toDouble()).toString())
-                } else if(tvValue.contains("/")) {
-                    var splitString = tvValue.split("/")
-                    // 99-1
-                    /// [99, 1]
-                    var firstValue = splitString[0]
-                    var secondValue = splitString[1]
+                    tvValue.contains("+") -> {
+                        val splitString = tvValue.split("+")
+                        // 99-1
+                        /// [99, 1]
+                        var firstValue = splitString[0]
+                        val secondValue = splitString[1]
 
-                    if (prefix.isNotEmpty()) {
-                        firstValue = prefix + firstValue
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        tvInput?.text = removeZeroAfterDot((firstValue.toDouble() + secondValue.toDouble()).toString())
                     }
 
-                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() / secondValue.toDouble()).toString())
-                } else if(tvValue.contains("*")) {
-                    var splitString = tvValue.split("*")
-                    // 99-1
-                    /// [99, 1]
-                    var firstValue = splitString[0]
-                    var secondValue = splitString[1]
+                    tvValue.contains("/") -> {
+                        val splitString = tvValue.split("/")
+                        // 99-1
+                        /// [99, 1]
+                        var firstValue = splitString[0]
+                        val secondValue = splitString[1]
 
-                    if (prefix.isNotEmpty()) {
-                        firstValue = prefix + firstValue
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+
+                        tvInput?.text = removeZeroAfterDot((firstValue.toDouble() / secondValue.toDouble()).toString())
                     }
-                    tvInput?.text = removeZeroAfterDot((firstValue.toDouble() * secondValue.toDouble()).toString())
+
+                    tvValue.contains("*") -> {
+                        val splitString = tvValue.split("*")
+                        // 99-1
+                        /// [99, 1]
+                        var firstValue = splitString[0]
+                        val secondValue = splitString[1]
+
+                        if (prefix.isNotEmpty()) {
+                            firstValue = prefix + firstValue
+                        }
+                        tvInput?.text = removeZeroAfterDot((firstValue.toDouble() * secondValue.toDouble()).toString())
+                    }
                 }
             } catch (e: ArithmeticException) {
                 e.printStackTrace()
