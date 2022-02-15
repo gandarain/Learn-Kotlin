@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/divided"
-            android:onClick="onDigit"
+            android:onClick="onOperator"
             tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
@@ -108,7 +108,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/multiply"
-            android:onClick="onDigit"
+            android:onClick="onOperator"
             tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
@@ -156,7 +156,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/minus"
-            android:onClick="onDigit"
+            android:onClick="onOperator"
             tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
@@ -172,9 +172,19 @@
             android:id="@+id/btnZero"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="@string/_0"
             android:onClick="onDigit"
+            tools:ignore="UsingOnClickInXml" />
+
+        <Button
+            android:layout_margin="2dp"
+            android:id="@+id/btnDot"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/dot"
+            android:onClick="onDecimalPoint"
             tools:ignore="UsingOnClickInXml" />
 
         <Button
@@ -194,7 +204,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/plus"
-            android:onClick="onDigit"
+            android:onClick="onOperator"
             tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
@@ -212,7 +222,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/equal"
-            android:onClick="onDigit"
+            android:onClick="onEqual"
             tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
