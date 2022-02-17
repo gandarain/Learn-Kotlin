@@ -4,10 +4,7 @@ import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 
 class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
@@ -51,12 +48,13 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setQuestions() {
+        setDefaultOptionView()
         var question: Question = questionsList!![currentProgress-1]
         textViewQuestion?.text = question.question
         imageViewFlag?.setImageResource(question.image)
         progressBar?.progress = currentProgress
         textViewProgress?.text = "${currentProgress}/${progressBar?.max}"
-        optionOne?.text = question.optionFour
+        optionOne?.text = question.optionOne
         optionTwo?.text = question.optionTwo
         optionThree?.text = question.optionThree
         optionFour?.text = question.optionFour
@@ -89,9 +87,38 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         this.selectedOption = selectedOption
 
         // set the selected option with styling
-        textViewSelected.setTextColor(ContextCompat.getColor(this, R.color.purple_500))
+        textViewSelected.setTextColor(ContextCompat.getColor(this, R.color.textColor))
         textViewSelected.setTypeface(textViewSelected.typeface, Typeface.BOLD)
         textViewSelected.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg)
+    }
+
+    private fun onSubmitQuestion() {
+        if (this.selectedOption == 0) {
+            this.currentProgress++
+
+            when {
+                this.currentProgress <= this.questionsList!!.size -> {
+                    setQuestions()
+                }
+                else -> {
+                    Toast.makeText(this, "End of Quiz", Toast.LENGTH_LONG).show()
+                }
+            }
+        } else {
+            val question: Question? = this.questionsList?.get(this.currentProgress - 1)
+            if (question!!.correctAnswer != this.selectedOption) {
+                answerView(this.selectedOption, R.drawable.wrong_option_border_bg)
+            }
+            answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
+
+            if (this.currentProgress == this.questionsList?.size) {
+                this.buttonSubmit?.text = "FINISH"
+            } else {
+                this.buttonSubmit?.text = "GO TO NEXT QUESTION"
+            }
+
+            this.selectedOption = 0
+        }
     }
 
     override fun onClick(view: View?) {
@@ -109,7 +136,28 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 optionFour?.let { onSelectOption(it, 4) }
             }
             R.id.buttonSubmit -> {
-                // TODO "Implement button submit"
+                onSubmitQuestion()
+            }
+        }
+    }
+
+    private fun answerView(answer: Int, drawable: Int) {
+        when(answer) {
+            1 -> {
+                optionOne?.background = ContextCompat.getDrawable(this, drawable)
+                optionOne?.setTextColor(ContextCompat.getColor(this, R.color.white))
+            }
+            2 -> {
+                optionTwo?.background = ContextCompat.getDrawable(this, drawable)
+                optionTwo?.setTextColor(ContextCompat.getColor(this, R.color.white))
+            }
+            3 -> {
+                optionThree?.background = ContextCompat.getDrawable(this, drawable)
+                optionThree?.setTextColor(ContextCompat.getColor(this, R.color.white))
+            }
+            4 -> {
+                optionFour?.background = ContextCompat.getDrawable(this, drawable)
+                optionFour?.setTextColor(ContextCompat.getColor(this, R.color.white))
             }
         }
     }
