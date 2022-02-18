@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
             if (editTextName.text.isEmpty()) {
                 Toast.makeText(this, "Please fill your name", Toast.LENGTH_LONG).show()
             } else {
+                intent.putExtra(Constants.USER_NAME, editTextName.text.toString())
                 startActivity(intent)
                 finish()
             }

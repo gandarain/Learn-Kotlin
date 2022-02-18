@@ -1,5 +1,6 @@
 package com.example.quiz
 
+import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,11 +23,15 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private var questionsList: ArrayList<Question>? = null
     private var selectedOption: Int = 0
 
+    private var userName: String = ""
+    private var correctAnswer: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
 
         questionsList = Constants.getQuestions()
+        userName = intent.getStringExtra(Constants.USER_NAME).toString()
 
         textViewQuestion = findViewById(R.id.textViewQuestion)
         imageViewFlag = findViewById(R.id.imageViewFlag)
@@ -101,13 +106,20 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     setQuestions()
                 }
                 else -> {
-                    Toast.makeText(this, "End of Quiz", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra(Constants.USER_NAME, this.userName)
+                    intent.putExtra(Constants.CORRECT_ANSWER, this.correctAnswer)
+                    intent.putExtra(Constants.TOTAL_QUESTIONS, this.questionsList?.size)
+                    startActivity(intent)
+                    finish()
                 }
             }
         } else {
             val question: Question? = this.questionsList?.get(this.currentProgress - 1)
             if (question!!.correctAnswer != this.selectedOption) {
                 answerView(this.selectedOption, R.drawable.wrong_option_border_bg)
+            } else {
+                this.correctAnswer++
             }
             answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
 

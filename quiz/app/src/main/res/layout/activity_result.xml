@@ -15,9 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
-        tools:text="Result" />
+        android:text="Result" />
 
     <ImageView
         android:id="@+id/imageViewTrophy"
@@ -25,38 +25,38 @@
         android:layout_height="300dp"
         android:layout_marginTop="16dp"
         android:contentDescription="Trophy Image"
-        tools:src="@drawable/ic_trophy"/>
+        android:src="@drawable/ic_trophy"/>
 
     <TextView
         android:id="@+id/textViewCongratulation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
-        tools:text="Hey, Congratulations!" />
+        android:text="Hey, Congratulations!" />
 
     <TextView
-        android:id="@+id/textViewUsername"
+        android:id="@+id/textViewResultUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
         tools:text="Username" />
 
     <TextView
-        android:id="@+id/textViewScore"
+        android:id="@+id/textViewResultScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/borderColor"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_marginTop="10dp"
         tools:text="Your score is 0 out 9" />
 
     <Button
-        android:id="@+id/btnStart"
+        android:id="@+id/buttonFinish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
