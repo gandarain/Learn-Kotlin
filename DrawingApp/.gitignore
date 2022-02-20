@@ -12,5 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
-*.keystore
-*.apk
+local.properties
