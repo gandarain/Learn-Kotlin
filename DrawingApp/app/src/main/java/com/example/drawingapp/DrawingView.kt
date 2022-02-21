@@ -16,6 +16,10 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
     private var color: Int = Color.BLACK
     private var canvas: Canvas? = null
 
+    // this variable will be used to store all the path
+    // so the line will be persist on the canvas
+    private val mPaths: ArrayList<CustomPath> = ArrayList<CustomPath>()
+
     init {
         setupDrawing()
     }
@@ -43,6 +47,13 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
+
+        // show all the available path
+        for (path in mPaths) {
+            mDrawPaint!!.strokeWidth = path!!.brushThickness
+            mDrawPaint!!.color = path!!.color
+            canvas.drawPath(path, mDrawPaint!!)
+        }
 
         if (!mDrawPath!!.isEmpty) {
             mDrawPaint!!.strokeWidth = mDrawPath!!.brushThickness
@@ -79,6 +90,8 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
             }
             // when release the touch
             MotionEvent.ACTION_UP -> {
+                // store the path into mPaths
+                mPaths.add(mDrawPath!!)
                 mDrawPath = CustomPath(color, mBrushSize)
             }
             // don't do anything for other motion event
