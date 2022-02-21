@@ -3,6 +3,7 @@ package com.example.drawingapp
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 
@@ -32,7 +33,8 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
         mDrawPaint!!.strokeJoin = Paint.Join.ROUND
         mDrawPaint!!.strokeCap = Paint.Cap.ROUND
         mCanvasPaint = Paint(Paint.DITHER_FLAG)
-        mBrushSize = 20.toFloat()
+        // no need to set mBrushSize because it will set on the main activity
+        // mBrushSize = 20.toFloat()
     }
 
     // this function will call when view (DrawingView) is displayed
@@ -102,6 +104,18 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
         invalidate()
 
         return true
+    }
+
+    // this function will call on the main activity
+    fun setSizeForBrush(newSize: Float) {
+        // adjust to size of the screen
+        mBrushSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            newSize,
+            resources.displayMetrics
+        )
+
+        mDrawPaint!!.strokeWidth = mBrushSize
     }
 
     // custom path is nested class from drawing view
