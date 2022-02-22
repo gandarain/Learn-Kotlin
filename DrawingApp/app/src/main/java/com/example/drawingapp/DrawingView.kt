@@ -118,6 +118,11 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
         mDrawPaint!!.strokeWidth = mBrushSize
     }
 
+    fun setColor(newColor: String) {
+        color = Color.parseColor(newColor)
+        mDrawPaint!!.color = color
+    }
+
     // custom path is nested class from drawing view
     // only used on drawing view
     // custom path inherit from class path

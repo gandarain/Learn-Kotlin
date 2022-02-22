@@ -59,4 +59,27 @@ class MainActivity : AppCompatActivity() {
 
         brushDialog.show()
     }
+
+    fun palletClick(view: View) {
+        if (view !== mImageButtonCurrentPaint) {
+            // get the color
+            val selectedImageColor = view as ImageButton
+            val selectedColor = selectedImageColor.tag.toString()
+
+            // set the selected color
+            drawingView?.setColor(selectedColor)
+
+            // set the selected color image to pallet selected
+            selectedImageColor.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_selected)
+            )
+
+            // set the global selected color image to pallet normal
+            mImageButtonCurrentPaint?.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_normal)
+            )
+
+            mImageButtonCurrentPaint = view
+        }
+    }
 }
