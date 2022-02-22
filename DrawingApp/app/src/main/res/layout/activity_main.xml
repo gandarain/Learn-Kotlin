@@ -6,25 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.drawingapp.DrawingView
-        android:id="@+id/drawingView"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="1dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_drawing_view_layout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/paintColors"
-        android:layout_margin="5dp"
-        android:background="@drawable/background_drawing_view_layout" />
+        app:layout_constraintBottom_toTopOf="@+id/paintColors">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/image"/>
+
+        <com.example.drawingapp.DrawingView
+            android:id="@+id/drawingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/drawingViewBackground" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/paintColors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/imageButtonBrushPicker"
+        app:layout_constraintBottom_toTopOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drawingView"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
         android:orientation="horizontal">
 
         <ImageButton
@@ -110,16 +126,33 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/imageButtonBrushPicker"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:src="@drawable/ic_brush"
-        android:scaleType="fitXY"
+    <LinearLayout
+        android:id="@+id/actionButton"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/paintColors"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/imageButtonImagePicker"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_gallery"
+            android:scaleType="fitXY" />
+
+        <ImageButton
+            android:id="@+id/imageButtonBrushPicker"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_brush"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
