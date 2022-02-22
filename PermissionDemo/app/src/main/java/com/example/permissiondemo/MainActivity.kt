@@ -58,7 +58,10 @@ class MainActivity : AppCompatActivity() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Cancel") { dialog, _ ->
+            .setPositiveButton("Ask Again") { _, _ ->
+                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
         builder.create().show()
