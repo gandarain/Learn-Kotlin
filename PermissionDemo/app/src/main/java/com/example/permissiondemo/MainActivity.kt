@@ -79,7 +79,20 @@ class MainActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                 showRationaleDialog(
                     "Permission demo requires for the camera access",
-                    "Camera can not be used because camera access is denied"
+                    "Camera can not be used because camera access is denied",
+                    Manifest.permission.CAMERA
+                )
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                showRationaleDialog(
+                    "Permission demo requires for the fine location access",
+                    "Location can not be used because fine location access is denied",
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                showRationaleDialog(
+                    "Permission demo requires for the coarse location access",
+                    "Location can not be used because fine coarse access is denied",
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             } else {
                 cameraAndLocationResultLauncher.launch(arrayOfPermission)
@@ -93,13 +106,14 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showRationaleDialog(
         title: String,
-        message: String
+        message: String,
+        permissionName: String
     ) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle(title)
             .setMessage(message)
             .setPositiveButton("Ask Again") { _, _ ->
-                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+                cameraResultLauncher.launch(permissionName)
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
