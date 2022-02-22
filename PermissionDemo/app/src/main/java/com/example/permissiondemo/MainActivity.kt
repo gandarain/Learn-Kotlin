@@ -16,17 +16,57 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()) {
                 isGranted ->
                     if (isGranted) {
-                        Toast.makeText(
-                            this,
-                            "Permission granted for the camera.",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showToast("Permission granted for the camera.")
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Permission is not granted for the camera.",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showToast("Permission is not granted for the camera.")
+                    }
+                }
+
+    private val arrayOfPermission: Array<String> = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    private val cameraAndLocationResultLauncher: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()) {
+                permission ->
+                    permission.entries.forEach {
+                        val permissionName = it.key
+                        val isGranted = it.value
+
+                        if (isGranted) {
+                            when(permissionName){
+                                Manifest.permission.CAMERA -> {
+                                    showToast("Permission granted for the camera.")
+                                }
+                                Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                    showToast("Permission granted for the fine location.")
+                                }
+                                Manifest.permission.ACCESS_COARSE_LOCATION -> {
+                                    showToast("Permission granted for the coarse location.")
+                                }
+                                else -> {
+                                    showToast("Permission granted for the location.")
+                                }
+                            }
+                        } else {
+                            when(permissionName){
+                                Manifest.permission.CAMERA -> {
+                                    showToast("Permission is not granted for the camera.")
+                                }
+                                Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                    showToast("Permission is not granted for the fine location.")
+                                }
+                                Manifest.permission.ACCESS_COARSE_LOCATION -> {
+                                    showToast("Permission is not granted for the coarse location.")
+                                }
+                                else -> {
+                                    showToast("Permission is not granted for the location.")
+                                }
+                            }
+                        }
                     }
             }
 
@@ -42,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                     "Camera can not be used because camera access is denied"
                 )
             } else {
-                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+                cameraAndLocationResultLauncher.launch(arrayOfPermission)
             }
         }
     }
@@ -53,7 +93,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showRationaleDialog(
         title: String,
-        message: String,
+        message: String
     ) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle(title)
@@ -65,5 +105,13 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         builder.create().show()
+    }
+
+    private fun showToast(title: String) {
+        Toast.makeText(
+            this,
+            title,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
