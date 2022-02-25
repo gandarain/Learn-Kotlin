@@ -21,8 +21,20 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
     // so the line will be persist on the canvas
     private val mPaths: ArrayList<CustomPath> = ArrayList<CustomPath>()
 
+    // undo path
+    private val mUndoPath: ArrayList<CustomPath> = ArrayList<CustomPath>()
+
     init {
         setupDrawing()
+    }
+
+    // undo handler
+    fun onUndoHandler() {
+        // remove last mPath, and set it into mUndoPath
+        if (mPaths.size > 0) {
+            mUndoPath.add(mPaths.removeAt(mPaths.size - 1))
+            invalidate()
+        }
     }
 
     private fun setupDrawing() {

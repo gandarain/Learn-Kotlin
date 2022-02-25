@@ -77,6 +77,11 @@ class MainActivity : AppCompatActivity() {
         galleryImageButton.setOnClickListener {
             requestStoragePermission()
         }
+
+        var undoImageButton: ImageButton = findViewById(R.id.imageButtonUndo)
+        undoImageButton.setOnClickListener {
+            drawingView?.onUndoHandler()
+        }
     }
 
     private fun showBrushChooserDialog() {
