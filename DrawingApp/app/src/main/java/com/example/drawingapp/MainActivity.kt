@@ -3,11 +3,14 @@ package com.example.drawingapp
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -16,16 +19,37 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
+    // activity for select image from gallery
+    private val openGalleryResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                var imageViewBackground = findViewById<ImageView>(R.id.imageViewBackground)
+                imageViewBackground.setImageURI(result.data?.data)
+            } else {
+                showToast("Please select an image.")
+            }
+        }
+
+    // permission for read gallery
     private val galleryResultLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()) {
                 isGranted ->
             if (isGranted) {
                 showToast("Permission granted for the camera.")
+                // start new intent to gallery
+                var galleryIntent = Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                )
+                // launch gallery intent
+                openGalleryResultLauncher.launch(galleryIntent)
             } else {
                 showToast("Permission is not granted for the camera.")
             }
         }
+
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
 
