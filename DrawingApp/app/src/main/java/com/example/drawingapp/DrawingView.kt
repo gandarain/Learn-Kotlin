@@ -30,9 +30,20 @@ class DrawingView(context: Context, attr: AttributeSet): View(context, attr) {
 
     // undo handler
     fun onUndoHandler() {
-        // remove last mPath, and set it into mUndoPath
+        // add last index on mPath to mUndoPath
+        // remove last index on mPath
         if (mPaths.size > 0) {
             mUndoPath.add(mPaths.removeAt(mPaths.size - 1))
+            invalidate()
+        }
+    }
+
+    // redo handler
+    fun onRedoHandler() {
+        // add last index on mUndoPath to mPath
+        // remove last index on mUndoPath
+        if (mUndoPath.size > 0) {
+            mPaths.add(mUndoPath.removeAt(mUndoPath.size - 1))
             invalidate()
         }
     }

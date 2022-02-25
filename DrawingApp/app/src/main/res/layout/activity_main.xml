@@ -154,6 +154,14 @@
             android:scaleType="fitXY" />
 
         <ImageButton
+            android:id="@+id/imageButtonRedo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_redo"
+            android:scaleType="fitXY" />
+
+        <ImageButton
             android:id="@+id/imageButtonBrushPicker"
             android:layout_width="50dp"
             android:layout_height="50dp"

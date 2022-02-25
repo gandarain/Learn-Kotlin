@@ -82,6 +82,11 @@ class MainActivity : AppCompatActivity() {
         undoImageButton.setOnClickListener {
             drawingView?.onUndoHandler()
         }
+
+        var redoImageButton: ImageButton = findViewById(R.id.imageButtonRedo)
+        redoImageButton.setOnClickListener {
+            drawingView?.onRedoHandler()
+        }
     }
 
     private fun showBrushChooserDialog() {
