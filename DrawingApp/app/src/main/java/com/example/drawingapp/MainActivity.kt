@@ -1,15 +1,31 @@
 package com.example.drawingapp
 
+import android.Manifest
+import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
+    private val galleryResultLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()) {
+                isGranted ->
+            if (isGranted) {
+                showToast("Permission granted for the camera.")
+            } else {
+                showToast("Permission is not granted for the camera.")
+            }
+        }
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
 
@@ -32,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         brushPicker.setOnClickListener {
             showBrushChooserDialog()
         }
+
+        var galleryImageButton: ImageButton = findViewById(R.id.imageButtonImagePicker)
+        galleryImageButton.setOnClickListener {
+            requestStoragePermission()
+        }
     }
 
     private fun showBrushChooserDialog() {
@@ -51,13 +72,13 @@ class MainActivity : AppCompatActivity() {
             brushDialog.dismiss()
         }
 
+        brushDialog.show()
+
         val largeBrush = brushDialog.findViewById<View>(R.id.imageButtonLargeBrush)
         largeBrush.setOnClickListener {
             drawingView?.setSizeForBrush(30.toFloat())
             brushDialog.dismiss()
         }
-
-        brushDialog.show()
     }
 
     fun palletClick(view: View) {
@@ -80,6 +101,50 @@ class MainActivity : AppCompatActivity() {
             )
 
             mImageButtonCurrentPaint = view
+        }
+    }
+
+    private fun showToast(title: String) {
+        Toast.makeText(
+            this,
+            title,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    /**
+     * Shows rationale dialog for displaying why the app needs permission
+     * Only shown if the user has denied the permission request previously
+     */
+    private fun showRationaleDialog(
+        title: String,
+        message: String,
+        permissionName: String
+    ) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Ask Again") { _, _ ->
+                galleryResultLauncher.launch(permissionName)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
+    }
+
+    private fun requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showRationaleDialog(
+                "Drawing App",
+                "Drawing App need to access your external storage",
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        } else {
+            galleryResultLauncher.launch(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+                // TODO - add writing external storage permission
+            )
         }
     }
 }
