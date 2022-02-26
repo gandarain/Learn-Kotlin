@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     // activity for select image from gallery
     private val openGalleryResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result ->
+                result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
                 var imageViewBackground = findViewById<ImageView>(R.id.imageViewBackground)
                 imageViewBackground.setImageURI(result.data?.data)
@@ -32,21 +32,30 @@ class MainActivity : AppCompatActivity() {
         }
 
     // permission for read gallery
-    private val galleryResultLauncher: ActivityResultLauncher<String> =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()) {
-                isGranted ->
-            if (isGranted) {
-                showToast("Permission granted for the camera.")
-                // start new intent to gallery
-                var galleryIntent = Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                )
-                // launch gallery intent
-                openGalleryResultLauncher.launch(galleryIntent)
-            } else {
-                showToast("Permission is not granted for the camera.")
+    val requestPermission: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach {
+                val perMissionName = it.key
+                val isGranted = it.value
+
+                // if permission is granted show a toast and perform operation
+                if (isGranted ) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Permission granted now you can read the storage files.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    val pickIntent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    openGalleryResultLauncher.launch(pickIntent)
+                } else {
+                    if (perMissionName == Manifest.permission.READ_EXTERNAL_STORAGE)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Oops you just denied the permission.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                }
             }
         }
 
@@ -153,13 +162,13 @@ class MainActivity : AppCompatActivity() {
     private fun showRationaleDialog(
         title: String,
         message: String,
-        permissionName: String
+        permissions: Array<String>
     ) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle(title)
             .setMessage(message)
             .setPositiveButton("Ask Again") { _, _ ->
-                galleryResultLauncher.launch(permissionName)
+                requestPermission.launch(permissions)
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
@@ -168,16 +177,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        // Check if the permission was denied and show rationale
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
+            // call the rationale dialog to tell the user why they need to allow permission request
             showRationaleDialog(
                 "Drawing App",
-                "Drawing App need to access your external storage",
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                "Drawing App " + "needs to Access Your Storage",
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
             )
         } else {
-            galleryResultLauncher.launch(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-                // TODO - add writing external storage permission
+            // You can directly ask for the permission.
+            // if it has not been denied then request for permission
+            // The registered ActivityResultCallback gets the result of this request.
+            requestPermission.launch(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
             )
         }
     }
