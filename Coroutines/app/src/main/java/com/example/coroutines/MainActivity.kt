@@ -1,5 +1,6 @@
 package com.example.coroutines
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+    private var dialog: Dialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         executeButton.setOnClickListener {
             // launch coroutine function in life cycle scope
             lifecycleScope.launch {
+                showDialog()
                 execute()
             }
         }
@@ -36,12 +40,42 @@ class MainActivity : AppCompatActivity() {
 
             // run related ui on ui thread
             runOnUiThread {
+                hideDialog()
                 Toast.makeText(
                     this@MainActivity,
                     "Done",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+    }
+
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun showDialog() {
+        // Define the dialog
+        dialog = Dialog(this@MainActivity)
+
+        /* Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen. */
+        dialog?.setContentView(R.layout.dialog_custom_progress)
+        dialog?.setCancelable(false)
+
+        // Start the dialog and display it on screen.
+        dialog?.show()
+    }
+
+    /**
+     * Method is used to hide the Custom Progress Dialog.
+     */
+    private fun hideDialog() {
+        // check if dialog null or not
+        if (dialog != null) {
+            // dismiss dialog when dialog is not null
+            dialog?.dismiss()
+            // set dialog to null
+            dialog = null
         }
     }
 }
