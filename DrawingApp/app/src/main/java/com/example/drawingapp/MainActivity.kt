@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
+    private var customProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         var saveImageButton: ImageButton = findViewById(R.id.imageButtonSave)
         saveImageButton.setOnClickListener {
             if (isReadStorageAllowed()) {
+                customProgressDialogFunction()
                 lifecycleScope.launch {
                     val frameLayout: FrameLayout = findViewById(R.id.frameLayout)
                     saveBitmapFile(getBitmapFromView(frameLayout))
@@ -255,7 +257,6 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun saveBitmapFile(bitmap: Bitmap?): String {
         var result = ""
-
         withContext(Dispatchers.IO) {
             if (bitmap != null) {
                 try {
@@ -284,6 +285,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             showToast("Something when wrong while saving the file")
                         }
+                        cancelProgressDialog()
                     }
                 } catch (e: Exception) {
                     result = ""
@@ -293,5 +295,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         return result
+    }
+
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun customProgressDialogFunction() {
+        customProgressDialog = Dialog(this)
+
+        /*Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen.*/
+        customProgressDialog?.setContentView(R.layout.dialog_custom_progress)
+
+        //Start the dialog and display it on screen.
+        customProgressDialog?.show()
+    }
+
+    private fun cancelProgressDialog() {
+        if (customProgressDialog != null) {
+            customProgressDialog?.hide()
+            customProgressDialog = null
+        }
     }
 }
