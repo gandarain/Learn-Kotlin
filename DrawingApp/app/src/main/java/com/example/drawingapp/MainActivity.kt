@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
     private var customProgressDialog: Dialog? = null
+    private var resultImage: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +119,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 requestStoragePermission()
             }
+        }
+
+        var shareImageButton: ImageButton = findViewById(R.id.imageButtonShare)
+        shareImageButton.setOnClickListener {
+            shareImageFile()
         }
     }
 
@@ -278,6 +285,7 @@ class MainActivity : AppCompatActivity() {
 
                     // assign the result
                     result = file.absolutePath
+                    resultImage = result
 
                     runOnUiThread{
                         if (result.isNotEmpty()) {
@@ -315,6 +323,22 @@ class MainActivity : AppCompatActivity() {
         if (customProgressDialog != null) {
             customProgressDialog?.hide()
             customProgressDialog = null
+        }
+    }
+
+    private fun shareImageFile() {
+        if (resultImage.isNotEmpty()) {
+            MediaScannerConnection.scanFile(this, arrayOf(resultImage), null) {
+                    path, uri ->
+                val shareIntent = Intent()
+                shareIntent.action = Intent.ACTION_SEND
+                // pass the location of file from the mobile phone into the intent
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareIntent.type = "image/png"
+                startActivity(Intent.createChooser(shareIntent, "Share Image"))
+            }
+        } else {
+            showToast("You need to save an image before able to share an image.")
         }
     }
 }
