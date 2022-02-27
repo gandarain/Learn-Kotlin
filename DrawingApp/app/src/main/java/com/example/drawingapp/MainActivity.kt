@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -12,14 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     // activity for select image from gallery
@@ -98,6 +103,18 @@ class MainActivity : AppCompatActivity() {
         var redoImageButton: ImageButton = findViewById(R.id.imageButtonRedo)
         redoImageButton.setOnClickListener {
             drawingView?.onRedoHandler()
+        }
+
+        var saveImageButton: ImageButton = findViewById(R.id.imageButtonSave)
+        saveImageButton.setOnClickListener {
+            if (isReadStorageAllowed()) {
+                lifecycleScope.launch {
+                    val frameLayout: FrameLayout = findViewById(R.id.frameLayout)
+                    saveBitmapFile(getBitmapFromView(frameLayout))
+                }
+            } else {
+                requestStoragePermission()
+            }
         }
     }
 
@@ -179,6 +196,18 @@ class MainActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    private fun isReadStorageAllowed(): Boolean {
+        var result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        /*
+          if (result == PackageManager.PERMISSION_GRANTED) {
+            return true
+          } else {
+            return false
+          }
+        */
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun requestStoragePermission() {
         // Check if the permission was denied and show rationale
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
@@ -222,5 +251,47 @@ class MainActivity : AppCompatActivity() {
 
         view.draw(canvas)
         return resultBitmap
+    }
+
+    private suspend fun saveBitmapFile(bitmap: Bitmap?): String {
+        var result = ""
+
+        withContext(Dispatchers.IO) {
+            if (bitmap != null) {
+                try {
+                    // get the bytes file and compress it
+                    val bytes = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    // generate file location and name
+                    val file = File(externalCacheDir?.absolutePath.toString() +
+                            File.separator + "DrawingApp" +
+                            System.currentTimeMillis() / 1000 +
+                            ".png"
+                    )
+
+                    // create file output stream
+                    val fileOutput = FileOutputStream(file)
+                    fileOutput.write(bytes.toByteArray())
+                    fileOutput.close()
+
+                    // assign the result
+                    result = file.absolutePath
+
+                    runOnUiThread{
+                        if (result.isNotEmpty()) {
+                            showToast("File save successfully: $result")
+                        } else {
+                            showToast("Something when wrong while saving the file")
+                        }
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        return result
     }
 }
