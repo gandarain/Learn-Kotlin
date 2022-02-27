@@ -4,22 +4,28 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     // activity for select image from gallery
@@ -64,6 +70,8 @@ class MainActivity : AppCompatActivity() {
 
     private var drawingView: DrawingView? = null
     private var mImageButtonCurrentPaint: ImageButton? = null
+    private var customProgressDialog: Dialog? = null
+    private var resultImage: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +106,24 @@ class MainActivity : AppCompatActivity() {
         var redoImageButton: ImageButton = findViewById(R.id.imageButtonRedo)
         redoImageButton.setOnClickListener {
             drawingView?.onRedoHandler()
+        }
+
+        var saveImageButton: ImageButton = findViewById(R.id.imageButtonSave)
+        saveImageButton.setOnClickListener {
+            if (isReadStorageAllowed()) {
+                customProgressDialogFunction()
+                lifecycleScope.launch {
+                    val frameLayout: FrameLayout = findViewById(R.id.frameLayout)
+                    saveBitmapFile(getBitmapFromView(frameLayout))
+                }
+            } else {
+                requestStoragePermission()
+            }
+        }
+
+        var shareImageButton: ImageButton = findViewById(R.id.imageButtonShare)
+        shareImageButton.setOnClickListener {
+            shareImageFile()
         }
     }
 
@@ -179,6 +205,18 @@ class MainActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    private fun isReadStorageAllowed(): Boolean {
+        var result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        /*
+          if (result == PackageManager.PERMISSION_GRANTED) {
+            return true
+          } else {
+            return false
+          }
+        */
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun requestStoragePermission() {
         // Check if the permission was denied and show rationale
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
@@ -222,5 +260,85 @@ class MainActivity : AppCompatActivity() {
 
         view.draw(canvas)
         return resultBitmap
+    }
+
+    private suspend fun saveBitmapFile(bitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if (bitmap != null) {
+                try {
+                    // get the bytes file and compress it
+                    val bytes = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+
+                    // generate file location and name
+                    val file = File(externalCacheDir?.absolutePath.toString() +
+                            File.separator + "DrawingApp" +
+                            System.currentTimeMillis() / 1000 +
+                            ".png"
+                    )
+
+                    // create file output stream
+                    val fileOutput = FileOutputStream(file)
+                    fileOutput.write(bytes.toByteArray())
+                    fileOutput.close()
+
+                    // assign the result
+                    result = file.absolutePath
+                    resultImage = result
+
+                    runOnUiThread{
+                        if (result.isNotEmpty()) {
+                            showToast("File save successfully: $result")
+                        } else {
+                            showToast("Something when wrong while saving the file")
+                        }
+                        cancelProgressDialog()
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun customProgressDialogFunction() {
+        customProgressDialog = Dialog(this)
+
+        /*Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen.*/
+        customProgressDialog?.setContentView(R.layout.dialog_custom_progress)
+
+        //Start the dialog and display it on screen.
+        customProgressDialog?.show()
+    }
+
+    private fun cancelProgressDialog() {
+        if (customProgressDialog != null) {
+            customProgressDialog?.hide()
+            customProgressDialog = null
+        }
+    }
+
+    private fun shareImageFile() {
+        if (resultImage.isNotEmpty()) {
+            MediaScannerConnection.scanFile(this, arrayOf(resultImage), null) {
+                    path, uri ->
+                val shareIntent = Intent()
+                shareIntent.action = Intent.ACTION_SEND
+                // pass the location of file from the mobile phone into the intent
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareIntent.type = "image/png"
+                startActivity(Intent.createChooser(shareIntent, "Share Image"))
+            }
+        } else {
+            showToast("You need to save an image before able to share an image.")
+        }
     }
 }
