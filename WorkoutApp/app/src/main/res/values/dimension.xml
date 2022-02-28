@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_screen_main_layout_padding">5dp</dimen>
+    <dimen name="button_circle_size">150dp</dimen>
+    <dimen name="default_text_button_size">22sp</dimen>
+    <dimen name="image_height_size">220dp</dimen>
+</resources>
