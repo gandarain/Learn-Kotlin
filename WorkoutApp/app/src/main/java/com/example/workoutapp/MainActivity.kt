@@ -1,5 +1,6 @@
 package com.example.workoutapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -17,11 +18,9 @@ class MainActivity : AppCompatActivity() {
 
         // val buttonStart: FrameLayout = findViewById(R.id.buttonStart)
         binding?.buttonStart?.setOnClickListener {
-            Toast.makeText(
-                this@MainActivity,
-                "Here will be start the exercise",
-                Toast.LENGTH_SHORT
-            ).show()
+            // navigate to ExerciseActivity
+            val intent = Intent(this@MainActivity, ExerciseActivity::class.java)
+            startActivity(intent)
         }
     }
 
