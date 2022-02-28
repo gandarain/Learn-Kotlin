@@ -16,7 +16,7 @@
         app:titleTextColor="@color/colorPrimary"/>
 
     <TextView
-        android:id="@+id/textStartExercise"
+        android:id="@+id/textRest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/default_text_button_size"
@@ -24,12 +24,12 @@
         android:textColor="@color/colorAccent"
         android:text="@string/title_exercise"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@id/frameLayoutExercise"
+        app:layout_constraintBottom_toTopOf="@id/frameLayoutRest"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <FrameLayout
-        android:id="@+id/frameLayoutExercise"
+        android:id="@+id/frameLayoutRest"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbarExercise">
 
         <ProgressBar
-            android:id="@+id/progressBarExercise"
+            android:id="@+id/progressBarRest"
             android:layout_width="100dp"
             android:layout_height="100dp"
             style="?android:attr/progressBarStyleHorizontal"
@@ -60,12 +60,58 @@
             android:background="@drawable/item_circular_color_accent_background">
 
             <TextView
-                android:id="@+id/textViewTimer"
+                android:id="@+id/textViewRestTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:text="10"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayoutExercise"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/item_circular_color_accent_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarExercise">
+
+        <ProgressBar
+            android:id="@+id/progressBarExercise"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_gravity="center"
+            android:max="30"
+            android:progress="300"
+            android:rotation="-90"
+            android:background="@drawable/circular_progress_grey"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:indeterminate="false"/>
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/item_circular_color_accent_background">
+
+            <TextView
+                android:id="@+id/textViewExerciseTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="30"
                 android:textSize="25sp"/>
 
         </LinearLayout>
