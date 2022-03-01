@@ -45,6 +45,11 @@ class ExerciseActivity : AppCompatActivity() {
         binding?.textRest?.visibility = View.VISIBLE
         binding?.frameLayoutRest?.visibility = View.VISIBLE
 
+        // show the next exercise
+        binding?.textViewTitleNextExercise?.visibility = View.VISIBLE
+        binding?.textViewNextExercise?.visibility = View.VISIBLE
+        binding?.textViewNextExercise?.text = exerciseList!![currentExercisePosition + 1].getName()
+
         // hide the exercise view
         binding?.textViewExerciseName?.visibility = View.INVISIBLE
         binding?.frameLayoutExercise?.visibility = View.INVISIBLE
@@ -86,6 +91,10 @@ class ExerciseActivity : AppCompatActivity() {
         // hide the rest view
         binding?.textRest?.visibility = View.INVISIBLE
         binding?.frameLayoutRest?.visibility = View.INVISIBLE
+
+        // hide the next exercise
+        binding?.textViewTitleNextExercise?.visibility = View.INVISIBLE
+        binding?.textViewNextExercise?.visibility = View.INVISIBLE
 
         // show the exercise view
         binding?.textViewExerciseName?.visibility = View.VISIBLE
