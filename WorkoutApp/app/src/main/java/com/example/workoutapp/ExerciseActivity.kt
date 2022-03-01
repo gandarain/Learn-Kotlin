@@ -14,10 +14,16 @@ class ExerciseActivity : AppCompatActivity() {
     private var constRestTimer: Int = 10
     private var constExerciseTimer: Int = 30
 
+    private var exerciseList: ArrayList<ExerciseModel>? = null
+    private var currentExercisePosition = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExerciseBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
+        // setup the exercise list
+        exerciseList = Constant.defaultExerciseList()
 
         // set the toolbar
         setSupportActionBar(binding?.toolbarExercise)
@@ -57,6 +63,7 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
+                currentExercisePosition++
                 setupTheExercise()
             }
         }.start()
