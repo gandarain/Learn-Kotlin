@@ -11,8 +11,6 @@ class ExerciseActivity : AppCompatActivity() {
     private var binding: ActivityExerciseBinding? = null
     private var restTimer: CountDownTimer? = null
     private var restProgress: Int = 0
-    private var constRestTimer: Int = 10
-    private var constExerciseTimer: Int = 30
 
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
@@ -40,13 +38,23 @@ class ExerciseActivity : AppCompatActivity() {
         setupTheRest()
     }
 
-    // reset the value of restTimer and binding when destroy the exercise activity
-    // setup the rest progress bar
+    // show the rest view
+    // hide the exercise view
     private fun setupTheRest() {
+        // show the rest view
+        binding?.textRest?.visibility = View.VISIBLE
+        binding?.frameLayoutRest?.visibility = View.VISIBLE
+
+        // hide the exercise view
+        binding?.textViewExerciseName?.visibility = View.INVISIBLE
+        binding?.frameLayoutExercise?.visibility = View.INVISIBLE
+        binding?.imageViewExercise?.visibility = View.INVISIBLE
+
         if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
         }
+
         setRestProgressBar()
     }
 
@@ -54,12 +62,12 @@ class ExerciseActivity : AppCompatActivity() {
     private fun setRestProgressBar() {
         binding?.progressBarRest?.progress = restProgress
         restTimer = object: CountDownTimer(
-            10000,
+            Constant.restTimerMilli,
             1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
-                binding?.progressBarRest?.progress = constRestTimer - restProgress
-                binding?.textViewRestTimer?.text = (constRestTimer - restProgress).toString()
+                binding?.progressBarRest?.progress = Constant.restTimer - restProgress
+                binding?.textViewRestTimer?.text = (Constant.restTimer - restProgress).toString()
             }
 
             override fun onFinish() {
@@ -69,33 +77,49 @@ class ExerciseActivity : AppCompatActivity() {
         }.start()
     }
 
-    // reset the value of restTimer and binding when destroy the exercise activity
-    // setup the rest progress bar
+    // hide the rest view
+    // show the exercise view
     private fun setupTheExercise() {
         restTimer?.cancel()
         restProgress = 0
+
+        // hide the rest view
+        binding?.textRest?.visibility = View.INVISIBLE
         binding?.frameLayoutRest?.visibility = View.INVISIBLE
+
+        // show the exercise view
+        binding?.textViewExerciseName?.visibility = View.VISIBLE
         binding?.frameLayoutExercise?.visibility = View.VISIBLE
+        binding?.imageViewExercise?.visibility = View.VISIBLE
+
+        // set the current exercise
+        binding?.imageViewExercise?.setImageResource(exerciseList!![currentExercisePosition].getImage())
+        binding?.textViewExerciseName?.text = exerciseList!![currentExercisePosition].getName()
+
         startExercise()
     }
 
     private fun startExercise() {
         binding?.progressBarExercise?.progress = restProgress
         restTimer = object: CountDownTimer(
-            30000,
+            Constant.exerciseMill,
             1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
-                binding?.progressBarExercise?.progress = constExerciseTimer - restProgress
-                binding?.textViewExerciseTimer?.text = (constExerciseTimer - restProgress).toString()
+                binding?.progressBarExercise?.progress = Constant.exerciseTimer - restProgress
+                binding?.textViewExerciseTimer?.text = (Constant.exerciseTimer - restProgress).toString()
             }
 
             override fun onFinish() {
-                Toast.makeText(
-                    this@ExerciseActivity,
-                    "Finish exercise one",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (currentExercisePosition < exerciseList!!.size-1) {
+                    setupTheRest()
+                } else {
+                    Toast.makeText(
+                        this@ExerciseActivity,
+                        "Congratulations, You have completed 7 minutes workout.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }.start()
     }
