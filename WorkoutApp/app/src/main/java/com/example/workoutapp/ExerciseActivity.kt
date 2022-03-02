@@ -1,5 +1,7 @@
 package com.example.workoutapp
 
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -19,6 +21,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercisePosition = -1
 
     private var textToSpeech: TextToSpeech? = null
+
+    private var player: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +50,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setupTheRest()
     }
 
+    // play the media player
     // show the rest view
     // hide the exercise view
     private fun setupTheRest() {
-        speakOut("Take a rest for ${Constant.restTimer}")
+        playMediaPlayer()
 
         // show the rest view
         binding?.textRest?.visibility = View.VISIBLE
@@ -153,10 +158,29 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
+    /**
+     * Here the sound file is added in to "raw" folder in resources.
+     * And played using MediaPlayer. MediaPlayer class can be used to control playback
+     * of audio/video files and streams.
+     */
+    private fun playMediaPlayer() {
+        try {
+            val soundURI =
+                Uri.parse("android.resource://com.example.workoutapp/" + R.raw.press_start)
+            player = MediaPlayer.create(applicationContext, soundURI)
+            // Sets the player to be looping or non-looping.
+            player?.isLooping = false
+            // Starts Playback.
+            player?.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     // reset the value of restTimer and binding when destroy the exercise activity
     // reset the text to speech
+    // reset the player
     override fun onDestroy() {
-        super.onDestroy()
         if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
@@ -167,6 +191,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             textToSpeech?.shutdown()
         }
 
+        if(player != null){
+            player!!.stop()
+        }
+
+        super.onDestroy()
         binding = null
     }
 
