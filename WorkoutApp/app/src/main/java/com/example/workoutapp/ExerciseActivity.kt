@@ -3,17 +3,22 @@ package com.example.workoutapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Toast
 import com.example.workoutapp.databinding.ActivityExerciseBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity() {
+class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var binding: ActivityExerciseBinding? = null
     private var restTimer: CountDownTimer? = null
     private var restProgress: Int = 0
 
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
+
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +40,17 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+        // Initialize the text to speech
+        textToSpeech = TextToSpeech(this@ExerciseActivity, this)
+
         setupTheRest()
     }
 
     // show the rest view
     // hide the exercise view
     private fun setupTheRest() {
+        speakOut("Take a rest for ${Constant.restTimer}")
+
         // show the rest view
         binding?.textRest?.visibility = View.VISIBLE
         binding?.frameLayoutRest?.visibility = View.VISIBLE
@@ -101,6 +111,9 @@ class ExerciseActivity : AppCompatActivity() {
         binding?.frameLayoutExercise?.visibility = View.VISIBLE
         binding?.imageViewExercise?.visibility = View.VISIBLE
 
+        // text to speech exercise
+        speakOut(exerciseList!![currentExercisePosition].getName())
+
         // set the current exercise
         binding?.imageViewExercise?.setImageResource(exerciseList!![currentExercisePosition].getImage())
         binding?.textViewExerciseName?.text = exerciseList!![currentExercisePosition].getName()
@@ -133,13 +146,51 @@ class ExerciseActivity : AppCompatActivity() {
         }.start()
     }
 
+    /**
+     * Function is used to speak the text what we pass to it.
+     */
+    private fun speakOut(text: String) {
+        textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
     // reset the value of restTimer and binding when destroy the exercise activity
+    // reset the text to speech
     override fun onDestroy() {
         super.onDestroy()
         if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
         }
+
+        if (textToSpeech != null) {
+            textToSpeech?.stop()
+            textToSpeech?.shutdown()
+        }
+
         binding = null
+    }
+
+    // init the text to speech
+    override fun onInit(status: Int) {
+        // check if text to speech is success launched
+        if (status == TextToSpeech.SUCCESS) {
+            // set US English as language for tts
+            val result = textToSpeech!!.setLanguage(Locale.US)
+
+            // check if language is available
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(
+                    this@ExerciseActivity,
+                    "Sorry, language is not available!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            Toast.makeText(
+                this@ExerciseActivity,
+                "Initialization Failed!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }

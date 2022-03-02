@@ -1,10 +1,10 @@
 package com.example.workoutapp
 
 object Constant {
-    const val restTimer: Int = 3
-    const val restTimerMilli: Long = 3000
-    const val exerciseTimer: Int = 6
-    const val exerciseMill: Long = 6000
+    const val restTimer: Int = 10
+    const val restTimerMilli: Long = 10000
+    const val exerciseTimer: Int = 30
+    const val exerciseMill: Long = 30000
     fun defaultExerciseList(): ArrayList<ExerciseModel> {
         val exerciseList = ArrayList<ExerciseModel>()
 
