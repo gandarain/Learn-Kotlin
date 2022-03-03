@@ -8,6 +8,7 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,6 +24,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
 
     private var player: MediaPlayer? = null
+
+    private var exerciseAdapter: ExerciseAdapterStatus? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,25 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this@ExerciseActivity, this)
 
         setupTheRest()
+
+        // setup the exercise recycler view
+        setupExerciseStatusRecyclerView()
+    }
+
+    /**
+     * Setup the recycler view
+     * Set the layout manager to be horizontal
+     * Set the exercise adapter value to be exercise list
+     */
+    private fun setupExerciseStatusRecyclerView() {
+        binding?.recyclerViewStatus?.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        exerciseAdapter = ExerciseAdapterStatus(exerciseList!!)
+        binding?.recyclerViewStatus?.adapter = exerciseAdapter
     }
 
     // play the media player
@@ -78,7 +100,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setRestProgressBar()
     }
 
-    // Every 1000 ms (1s) increasing the rest progress and change the text view and circular progress
+    /**
+     * Every 1000 ms (1s) increasing the rest progress and change the text view and circular progress
+     * Increase the rest progress on tick
+     * Increase the current exercise position on finish
+     * Set the isSelected to true on finish
+     * notifyDataSetChanged to trigger the changes of exercise adapter
+     */
     private fun setRestProgressBar() {
         binding?.progressBarRest?.progress = restProgress
         restTimer = object: CountDownTimer(
@@ -92,6 +120,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 currentExercisePosition++
+                // set the isSelected to true on finish
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                // notifyDataSetChanged to trigger the changes of exercise adapter
+                exerciseAdapter!!.notifyDataSetChanged()
                 setupTheExercise()
             }
         }.start()
@@ -126,6 +158,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         startExercise()
     }
 
+    /**
+     * Every 1000 ms (1s) increasing the exercise progress and change the text view and circular progress
+     * Increase the exercise progress on tick
+     * Set the isSelected to false, isCompleted to true on finish
+     * notifyDataSetChanged to trigger the changes of exercise adapter
+     */
     private fun startExercise() {
         binding?.progressBarExercise?.progress = restProgress
         restTimer = object: CountDownTimer(
@@ -138,6 +176,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
+                // set the isSelected to false on finish
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                // set the isCompleted to false on finish
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                // notifyDataSetChanged to trigger the changes of exercise adapter
+                exerciseAdapter!!.notifyDataSetChanged()
+
                 if (currentExercisePosition < exerciseList!!.size-1) {
                     setupTheRest()
                 } else {
