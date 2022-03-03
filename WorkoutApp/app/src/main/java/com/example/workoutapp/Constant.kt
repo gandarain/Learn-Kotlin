@@ -5,6 +5,7 @@ object Constant {
     const val restTimerMilli: Long = 10000
     const val exerciseTimer: Int = 30
     const val exerciseMill: Long = 30000
+    const val centiToMeter: Int = 100
     fun defaultExerciseList(): ArrayList<ExerciseModel> {
         val exerciseList = ArrayList<ExerciseModel>()
 
