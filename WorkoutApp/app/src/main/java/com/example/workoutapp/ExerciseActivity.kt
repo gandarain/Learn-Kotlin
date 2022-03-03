@@ -8,6 +8,7 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,6 +24,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
 
     private var player: MediaPlayer? = null
+
+    private var exerciseAdapter: ExerciseAdapterStatus? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,25 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this@ExerciseActivity, this)
 
         setupTheRest()
+
+        // setup the exercise recycler view
+        setupExerciseStatusRecyclerView()
+    }
+
+    /**
+     * Setup the recycler view
+     * Set the layout manager to be horizontal
+     * Set the exercise adapter value to be exercise list
+     */
+    private fun setupExerciseStatusRecyclerView() {
+        binding?.recyclerViewStatus?.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        exerciseAdapter = ExerciseAdapterStatus(exerciseList!!)
+        binding?.recyclerViewStatus?.adapter = exerciseAdapter
     }
 
     // play the media player
