@@ -1,5 +1,6 @@
 package com.example.workoutapp
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp.databinding.ActivityExerciseBinding
+import com.example.workoutapp.databinding.DialogCustomBackConfirmationBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,7 +47,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         // on press back
         binding?.toolbarExercise?.setNavigationOnClickListener {
-            onBackPressed()
+            customDialogFunction()
         }
 
         // Initialize the text to speech
@@ -265,5 +267,36 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    /**
+     * Override the onBackPressed
+     */
+    override fun onBackPressed() {
+        customDialogFunction()
+    }
+
+    /**
+     * Method is used to show the Custom Dialog.
+     */
+    private fun customDialogFunction() {
+        val customDialog = Dialog(this)
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        // Set the screen content from a layout resource.
+        // The resource will be inflated, adding all top-level views to the screen
+        customDialog.setContentView(dialogBinding.root)
+        customDialog.setCancelable(true)
+
+        dialogBinding.buttonYes.setOnClickListener {
+            this@ExerciseActivity.finish()
+            customDialog.dismiss()
+        }
+
+        dialogBinding.buttonNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+
+        // Start the dialog and display it on screen.
+        customDialog.show()
     }
 }
