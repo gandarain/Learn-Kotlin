@@ -100,7 +100,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setRestProgressBar()
     }
 
-    // Every 1000 ms (1s) increasing the rest progress and change the text view and circular progress
+    /**
+     * Every 1000 ms (1s) increasing the rest progress and change the text view and circular progress
+     * Increase the rest progress on tick
+     * Increase the current exercise position on finish
+     * Set the isSelected to true on finish
+     * notifyDataSetChanged to trigger the changes of exercise adapter
+     */
     private fun setRestProgressBar() {
         binding?.progressBarRest?.progress = restProgress
         restTimer = object: CountDownTimer(
@@ -114,6 +120,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 currentExercisePosition++
+                // set the isSelected to true on finish
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                // notifyDataSetChanged to trigger the changes of exercise adapter
+                exerciseAdapter!!.notifyDataSetChanged()
                 setupTheExercise()
             }
         }.start()
@@ -148,6 +158,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         startExercise()
     }
 
+    /**
+     * Every 1000 ms (1s) increasing the exercise progress and change the text view and circular progress
+     * Increase the exercise progress on tick
+     * Set the isSelected to false, isCompleted to true on finish
+     * notifyDataSetChanged to trigger the changes of exercise adapter
+     */
     private fun startExercise() {
         binding?.progressBarExercise?.progress = restProgress
         restTimer = object: CountDownTimer(
@@ -160,6 +176,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
+                // set the isSelected to false on finish
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                // set the isCompleted to false on finish
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                // notifyDataSetChanged to trigger the changes of exercise adapter
+                exerciseAdapter!!.notifyDataSetChanged()
+
                 if (currentExercisePosition < exerciseList!!.size-1) {
                     setupTheRest()
                 } else {
