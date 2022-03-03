@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FinishActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBarEnd"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/white"
+        app:titleTextColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/textViewEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="END"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/toolBarEnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutImageDone"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/item_circular_color_accent_border"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEnd">
+
+        <ImageView
+            android:id="@+id/imageViewDone"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_action_done"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCongratulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Congratulations!"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutImageDone"/>
+
+    <TextView
+        android:id="@+id/textViewCongratulationDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have done the exercise."
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCongratulation"/>
+
+    <Button
+        android:id="@+id/buttonFinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCongratulationDescription"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
