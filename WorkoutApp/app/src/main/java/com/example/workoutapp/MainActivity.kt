@@ -22,11 +22,25 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ExerciseActivity::class.java)
             startActivity(intent)
         }
+
+        bmiButtonListener()
     }
 
     // destroy the binding to avoid memory leak
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+    }
+
+    /**
+     * bmiButtonListener
+     * navigate to BmiActivity
+     */
+    private fun bmiButtonListener() {
+        binding?.buttonBmi?.setOnClickListener {
+            // navigate to BmiActivity
+            val intent = Intent(this@MainActivity, BmiActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
