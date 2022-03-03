@@ -1,5 +1,6 @@
 package com.example.workoutapp
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -186,11 +187,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 if (currentExercisePosition < exerciseList!!.size-1) {
                     setupTheRest()
                 } else {
-                    Toast.makeText(
-                        this@ExerciseActivity,
-                        "Congratulations, You have completed 7 minutes workout.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val intent = Intent(this@ExerciseActivity, FinishActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }.start()
