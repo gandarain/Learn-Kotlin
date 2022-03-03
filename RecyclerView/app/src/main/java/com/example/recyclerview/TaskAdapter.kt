@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview.databinding.RecyclerViewItemBinding
 
 class TaskAdapter(val taskList: List<Task>): RecyclerView.Adapter<TaskAdapter.MainViewHolder>() {
-    inner class MainViewHolder(val itemBinding: RecyclerViewItemBinding): RecyclerView.ViewHolder(itemBinding.root){
-        fun bindItem(task: Task) {
-            itemBinding.textViewTaskTitle.text = task.title
-            itemBinding.textViewTaskTime.text = task.timeStamp
+    inner class MainViewHolder(val itemBinding: RecyclerViewItemBinding)
+        : RecyclerView.ViewHolder(itemBinding.root){
+            fun bindItem(task: Task) {
+                itemBinding.textViewTaskTitle.text = task.title
+                itemBinding.textViewTaskTime.text = task.timeStamp
+            }
         }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskAdapter.MainViewHolder {
         return MainViewHolder(
