@@ -9,7 +9,13 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 class BmiActivity : AppCompatActivity() {
+    companion object {
+        private const val METRIC_UNITS_VIEW = "METRIC_UNIT_VIEW" // Metric Unit View
+        private const val US_UNITS_VIEW = "US_UNIT_VIEW" // US Unit View
+    }
+
     private var binding: ActivityBmiBinding? = null
+    private var currentVisibleView: String = METRIC_UNITS_VIEW
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +25,8 @@ class BmiActivity : AppCompatActivity() {
         setupToolbar()
 
         setupButtonValidate()
+
+        radioGroupListener()
     }
 
     /**
@@ -66,7 +74,7 @@ class BmiActivity : AppCompatActivity() {
     private fun validateMetricUnit(): Boolean {
         var isValid = true
 
-        if (binding?.editTextWeight?.text.toString().isEmpty()) {
+        if (binding?.editTextWeightMetric?.text.toString().isEmpty()) {
             isValid = false
         } else if (binding?.editTextHeight?.text.toString().isEmpty()) {
             isValid = false
@@ -80,7 +88,7 @@ class BmiActivity : AppCompatActivity() {
      */
     private fun calculateBmi(): Float {
         val heightValue: Float = binding?.editTextHeight?.text.toString().toFloat() / Constant.centiToMeter
-        val weightValue: Float = binding?.editTextWeight?.text.toString().toFloat()
+        val weightValue: Float = binding?.editTextWeightMetric?.text.toString().toFloat()
 
         return weightValue / (heightValue * heightValue)
     }
@@ -125,5 +133,42 @@ class BmiActivity : AppCompatActivity() {
         binding?.textViewBmiType?.text = bmiLabel
         binding?.textViewBmiDescription?.text = bmiDescription
         binding?.linerLayoutBmi?.visibility = View.VISIBLE
+    }
+
+    private fun radioGroupListener() {
+        binding?.radioGroup?.setOnCheckedChangeListener { group, checkedId: Int ->
+            if (checkedId == R.id.radioButtonMetric) {
+                radioButtonMetricListener()
+            } else {
+                radioButtonUnitListener()
+            }
+        }
+    }
+
+    private fun radioButtonMetricListener() {
+        currentVisibleView = METRIC_UNITS_VIEW
+        binding?.textInputWeightUnit?.visibility = View.INVISIBLE
+        binding?.linearLayoutUs?.visibility = View.INVISIBLE
+        binding?.linerLayoutBmi?.visibility = View.INVISIBLE
+
+        binding?.editTextFeet?.text!!.clear()
+        binding?.editTextInch?.text!!.clear()
+        binding?.editTextWeightUnit?.text!!.clear()
+
+        binding?.textInputWeightMetric?.visibility = View.VISIBLE
+        binding?.textInputHeight?.visibility = View.VISIBLE
+    }
+
+    private fun radioButtonUnitListener() {
+        currentVisibleView = US_UNITS_VIEW
+        binding?.textInputWeightMetric?.visibility = View.INVISIBLE
+        binding?.textInputHeight?.visibility = View.INVISIBLE
+        binding?.linerLayoutBmi?.visibility = View.INVISIBLE
+
+        binding?.editTextHeight?.text!!.clear()
+        binding?.editTextWeightMetric?.text!!.clear()
+
+        binding?.linearLayoutUs?.visibility = View.VISIBLE
+        binding?.textInputWeightUnit?.visibility = View.VISIBLE
     }
 }
