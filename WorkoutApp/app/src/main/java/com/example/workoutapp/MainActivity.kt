@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         bmiButtonListener()
+
+        historyButtonListener()
     }
 
     // destroy the binding to avoid memory leak
@@ -40,6 +42,18 @@ class MainActivity : AppCompatActivity() {
         binding?.buttonBmi?.setOnClickListener {
             // navigate to BmiActivity
             val intent = Intent(this@MainActivity, BmiActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    /**
+     * historyButtonListener
+     * navigate to HistoryActivity
+     */
+    private fun historyButtonListener() {
+        binding?.buttonHistory?.setOnClickListener {
+            // navigate to HistoryActivity
+            val intent = Intent(this@MainActivity, HistoryActivity::class.java)
             startActivity(intent)
         }
     }
