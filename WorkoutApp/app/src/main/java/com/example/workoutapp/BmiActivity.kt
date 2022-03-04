@@ -55,8 +55,8 @@ class BmiActivity : AppCompatActivity() {
      */
     private fun setupButtonValidate() {
         binding?.buttonCalculateBmi?.setOnClickListener {
-            if (validateMetricUnit()) {
-                val bmiResult = calculateBmi()
+            if (validateInput()) {
+                val bmiResult = if (currentVisibleView == METRIC_UNITS_VIEW) calculateBmi() else calculateBmiUs()
                 displayBmiResult(bmiResult)
             } else {
                 Toast.makeText(
@@ -65,6 +65,17 @@ class BmiActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+    }
+
+    /**
+     * validateInput
+     */
+    private fun validateInput(): Boolean {
+        return if (currentVisibleView == METRIC_UNITS_VIEW) {
+            validateMetricUnit()
+        } else {
+            validateUsUnit()
         }
     }
 
@@ -84,6 +95,23 @@ class BmiActivity : AppCompatActivity() {
     }
 
     /**
+     * validateUsUnit
+     */
+    private fun validateUsUnit(): Boolean {
+        var isValid = true
+
+        if (binding?.editTextWeightUnit?.text.toString().isEmpty()) {
+            isValid = false
+        } else if (binding?.editTextFeet?.text.toString().isEmpty()) {
+            isValid = false
+        } else if (binding?.editTextInch?.text.toString().isEmpty()) {
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    /**
      * Calculate BMI
      */
     private fun calculateBmi(): Float {
@@ -91,6 +119,25 @@ class BmiActivity : AppCompatActivity() {
         val weightValue: Float = binding?.editTextWeightMetric?.text.toString().toFloat()
 
         return weightValue / (heightValue * heightValue)
+    }
+
+    /**
+     * Calculate BMI US
+     */
+    private fun calculateBmiUs(): Float {
+        // Height Feet value entered in EditText component.
+        val usUnitHeightValueFeet: String = binding?.editTextFeet?.text.toString()
+        // Height Inch value entered in EditText component.
+        val usUnitHeightValueInch: String = binding?.editTextInch?.text.toString()
+        // Weight value entered in EditText component.
+        val usUnitWeightValue: Float = binding?.editTextWeightUnit?.text.toString().toFloat()
+
+        // Here the Height Feet and Inch values are merged and multiplied by 12 for converting it to inches.
+        val heightValue = usUnitHeightValueInch.toFloat() + usUnitHeightValueFeet.toFloat() * 12
+
+        // This is the Formula for US UNITS result.
+        // Reference Link : https://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html
+        return 703 * (usUnitWeightValue / (heightValue * heightValue))
     }
 
     /**
