@@ -26,5 +26,5 @@ interface EmployeeDao {
 
     // Todo 6: create a function to read one employee, this returns a Flow
     @Query("SELECT * FROM `employee-table` WHERE id=:id")
-    fun fetchAllEmployeeById(id: Int): Flow<List<EmployeeEntity>>
+    fun fetchAllEmployeeById(id: Int): Flow<EmployeeEntity>
 }
