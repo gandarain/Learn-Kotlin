@@ -2,9 +2,12 @@ package com.example.roomdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.roomdemo.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +24,14 @@ class MainActivity : AppCompatActivity() {
         binding?.buttonAdd?.setOnClickListener {
             // Todo pass in the employeeDao
             addRecord(employeeDao)
+        }
+
+        // Todo launch a coroutine block and fetch all employee
+        lifecycleScope.launch {
+            employeeDao.fetchAllEmployees().collect {
+                val employeeList = ArrayList(it)
+                setupListEmployee(employeeList, employeeDao)
+            }
         }
     }
 
@@ -39,6 +50,27 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             Toast.makeText(this@MainActivity, "Name and email can't be empty.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Todo: create an employee param to pass into updateRecordDialog and updateRecordDialog
+     * method
+     * Function is used show the list of inserted data.
+     */
+    private fun setupListEmployee(employeeList: ArrayList<EmployeeEntity>, employeeDao: EmployeeDao) {
+        if (employeeList.isNotEmpty()) {
+            // Adapter class is initialized and list is passed in the param.
+            val employeeAdapter = EmployeeAdapter(employeeList)
+            // Set the LayoutManager that this RecyclerView will use.
+            binding?.recyclerViewEmployeeList?.layoutManager = LinearLayoutManager(this)
+            // adapter instance is set to the recyclerview to inflate the items.
+            binding?.recyclerViewEmployeeList?.adapter = employeeAdapter
+            binding?.textViewNoRecords?.visibility = View.INVISIBLE
+            binding?.recyclerViewEmployeeList?.visibility = View.VISIBLE
+        } else {
+            binding?.textViewNoRecords?.visibility = View.VISIBLE
+            binding?.recyclerViewEmployeeList?.visibility = View.GONE
         }
     }
 

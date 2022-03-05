@@ -13,8 +13,8 @@ import com.example.roomdemo.databinding.ItemsRowBinding
  **/
 class EmployeeAdapter(
     private val employeeList: ArrayList<EmployeeEntity>,
-    private val updateListener: (id: Int) -> Unit,
-    private val deleteListener: (id: Int) -> Unit
+    // private val updateListener: (id: Int) -> Unit,
+    // private val deleteListener: (id: Int) -> Unit
 ): RecyclerView.Adapter<EmployeeAdapter.MainViewHolder>() {
 
     /**
@@ -80,11 +80,11 @@ class EmployeeAdapter(
 
         // Todo set onclick listItem on the icon and invoke update and delete listeners
         holder.imageViewEdit.setOnClickListener {
-            updateListener.invoke(employee.id)
+            // updateListener.invoke(employee.id)
         }
 
         holder.imageViewDelete.setOnClickListener {
-            deleteListener.invoke(employee.id)
+            // deleteListener.invoke(employee.id)
         }
         // end
     }
