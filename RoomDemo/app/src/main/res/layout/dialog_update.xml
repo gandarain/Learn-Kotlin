@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/textViewDialogTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Record"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="@id/editTextUpdateName"
+        app:layout_constraintTop_toTopOf="@id/editTextUpdateName"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/textViewNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="18sp" />
+
+    <EditText
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDialogTitle"
+        app:layout_constraintStart_toEndOf="@id/textViewNameLabel"
+        android:id="@+id/editTextUpdateName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Name" />
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="@id/editTextUpdateEmail"
+        app:layout_constraintTop_toTopOf="@id/editTextUpdateEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/textViewEmailLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Email ID"
+        android:textSize="18sp" />
+
+    <EditText
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextUpdateName"
+        app:layout_constraintStart_toEndOf="@id/textViewEmailLabel"
+        android:id="@+id/editTextUpdateEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Email" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/editTextUpdateEmail"
+        app:layout_constraintEnd_toStartOf="@id/textViewCancel"
+        android:id="@+id/textViewUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="UPDATE"
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/editTextUpdateEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/textViewCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:text="CANCEL"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
