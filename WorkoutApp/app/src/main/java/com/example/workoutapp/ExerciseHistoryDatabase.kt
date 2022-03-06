@@ -5,22 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-/** Todo
- * Create a database that stores exercise history information.
- * And a global method to get access to the database.
- */
-@Database(entities = [ExerciseHistoryEntity::class], version = 1)
-abstract class ExerciseHistoryDatabase: RoomDatabase() {
-    /**
-     * Connects the database to the DAO.
-     */
+// create the database
+@Database(entities = [ExerciseHistoryEntity::class],version = 1)
+abstract class ExerciseHistoryDatabase:RoomDatabase(){
     abstract fun exerciseHistoryDao(): ExerciseHistoryDao
 
     /**
-     * Define a companion object, this allows us to add functions on the ExerciseHistoryDatabase class.
-     *
-     * For example, classes can call `ExerciseHistoryDatabase.getInstance(context)` to instantiate
-     * a new ExerciseHistoryDatabase.
+     * Define a companion object, this allows us to add functions on the HistoryDatabase class.
      */
     companion object {
         /**
@@ -66,14 +57,14 @@ abstract class ExerciseHistoryDatabase: RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         ExerciseHistoryDatabase::class.java,
-                        "exercise-history-table"
-
+                        "history-table"
+                    )
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
                         // migration with Room in this blog post:
                         // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
-                    ).fallbackToDestructiveMigration().build()
-
+                        .fallbackToDestructiveMigration()
+                        .build()
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }

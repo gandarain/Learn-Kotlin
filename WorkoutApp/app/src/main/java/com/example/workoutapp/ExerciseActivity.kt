@@ -44,6 +44,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // setup the back button
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = "EXERCISE"
         }
         // on press back
         binding?.toolbarExercise?.setNavigationOnClickListener {
@@ -189,6 +190,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 if (currentExercisePosition < exerciseList!!.size-1) {
                     setupTheRest()
                 } else {
+                    // call new activity
                     val intent = Intent(this@ExerciseActivity, FinishActivity::class.java)
                     startActivity(intent)
                     finish()

@@ -13,7 +13,7 @@ interface ExerciseHistoryDao {
     suspend fun insert(exerciseHistory: ExerciseHistoryEntity)
 
     // Todo 3: create a function to read all exercise history, this returns a Flow
-    @Query("SELECT * FROM `exercise-history-table`")
+    @Query("Select * from `history-table`")
     // flow is used to hold a value that can change at runtime
     fun fetchAllExerciseHistory(): Flow<List<ExerciseHistoryEntity>>
 }

@@ -15,4 +15,6 @@
     <color name="circularGrey">#D4DEE7</color>
     <color name="statusTextColor">#212121</color>
     <color name="statusBorderColor">#C4C4C4</color>
+    <color name="borderColor">#C3C3C3</color>
+    <color name="softGrey">#EBEBEB</color>
 </resources>
