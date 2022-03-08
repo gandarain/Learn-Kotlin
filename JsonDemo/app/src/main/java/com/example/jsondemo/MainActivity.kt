@@ -8,6 +8,7 @@ import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.DataOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.StringBuilder
@@ -19,12 +20,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        CallApiLoginAsyncTask().execute()
+        CallApiLoginAsyncTask("ganda", "123456").execute()
     }
 
-    private inner class CallApiLoginAsyncTask(): AsyncTask<Any, Void, String>() {
+    private inner class CallApiLoginAsyncTask(val username: String, val password: String): AsyncTask<Any, Void, String>() {
         private lateinit var customProgressDialog: Dialog
 
+        // TODO on request start
         override fun onPreExecute() {
             super.onPreExecute()
             showProgressDialog()
@@ -42,8 +44,34 @@ class MainActivity : AppCompatActivity() {
                 // doOutput send data
                 connection.doOutput = true
 
+                connection.instanceFollowRedirects = false
+
+                // TODO set Request method
+                // POST, GET, PATCH, etc
+                connection.requestMethod = "POST"
+
+                // TODO Set connection property
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("charset", "utf-8")
+                connection.setRequestProperty("Accept", "application/json")
+
+                connection.useCaches = false
+
+                // TODO Write body POST request
+                val writeDataOutputStream = DataOutputStream(connection.outputStream)
+                val jsonRequest = JSONObject()
+                jsonRequest.put("username", username)
+                jsonRequest.put("password", password)
+
+                // TODO Flush and close the output stream
+                writeDataOutputStream.writeBytes(jsonRequest.toString())
+                writeDataOutputStream.flush()
+                writeDataOutputStream.close()
+
+                // TODO Read response
                 val httpResult: Int = connection.responseCode
-                // HTTP_OK ==> response code 200
+
+                // TODO check the response code, HTTP_OK ==> response code 200
                 if (httpResult == HttpURLConnection.HTTP_OK) {
                     val inputStream = connection.inputStream
                     val reader = BufferedReader(InputStreamReader(inputStream))
@@ -51,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                     var line: String? = null
 
                     try {
+                        // TODO read all the response as a string
                         while (reader.readLine().also { line = it } != null) {
                             stringBuilder.append(line + "\n")
                         }
@@ -79,6 +108,8 @@ class MainActivity : AppCompatActivity() {
             return result
         }
 
+        // TODO JSON Parse
+        // on request end
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             cancelProgressDialog()
