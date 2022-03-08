@@ -5,6 +5,8 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -80,7 +82,39 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             cancelProgressDialog()
-            Log.i("Json Response Result", result!!)
+            Log.i("Json Response Result ", result!!)
+
+            val jsonObject = JSONObject(result)
+            val message: String = jsonObject.optString("message")
+            Log.i("message ", message)
+            val userId: Int = jsonObject.optInt("user_id")
+            Log.i("userId ", "$userId")
+            val name: String = jsonObject.optString("name")
+            Log.i("name ", name)
+            val email: String = jsonObject.optString("email")
+            Log.i("email ", email)
+            val mobile: Int = jsonObject.optInt("mobile")
+            Log.i("mobile ", "$mobile")
+
+            val profileDetailObject: JSONObject = jsonObject.optJSONObject("profile_details")
+            val isProfileCompleted = profileDetailObject.optBoolean("is_profile_completed")
+            Log.i("isProfileCompleted ", "$isProfileCompleted")
+            val rating = profileDetailObject.optInt("rating")
+            Log.i("rating ", "$rating")
+
+            val dataListArray: JSONArray = jsonObject.optJSONArray("data_list")
+            Log.i("dataListArray length ", "${dataListArray.length()}")
+
+            for (item in 0 until dataListArray.length()) {
+                Log.i("dataListArray length ", "${dataListArray[item]}")
+                val dataItemObject: JSONObject = dataListArray[item] as JSONObject
+
+                val id: Int = dataItemObject.optInt("id")
+                Log.i("dataListArray id ", "$id")
+
+                val value: String = dataItemObject.optString("value")
+                Log.i("dataListArray value ", value)
+            }
         }
 
         private fun showProgressDialog() {
