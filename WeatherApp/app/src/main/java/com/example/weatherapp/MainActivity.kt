@@ -143,6 +143,21 @@ class MainActivity : AppCompatActivity() {
 
             val longitude = mLastLocation.longitude
             Log.i("Current Longitude", "$longitude")
+
+            getLocationWeatherDetails()
+        }
+    }
+
+    // TODO (Get the weather if have internet connection)
+    /**
+     * Check connection
+     * Call the API to get the weather based on location
+     */
+    private fun getLocationWeatherDetails() {
+        if (Constant.isNetworkAvailable(this)) {
+            showToastText("You have connected to the internet.")
+        } else {
+            showToastText("No internet connection available.")
         }
     }
 
