@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,7 @@ import retrofit.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var mProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,11 +191,17 @@ class MainActivity : AppCompatActivity() {
                 latitude, longitude, Constant.METRIC_UNIT, Constant.APP_ID
             )
 
+            // Show the progress dialog
+            // START
+            showCustomProgressDialog() // Used to show the progress dialog
+            // END
+
             // Callback methods are executed using the Retrofit callback executor.
             listCall.enqueue(object: Callback<WeatherResponse>{
                 override fun onResponse(response: Response<WeatherResponse>?, retrofit: Retrofit?) {
                     // Check weather the response is success or not.
                     if(response!!.isSuccess){
+                        hideProgressDialog()
                         /** The de-serialized response body of a successful response. */
                         val weatherList: WeatherResponse = response.body()
                         Log.i("Response result ", "${weatherList}")
@@ -214,6 +222,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(t: Throwable?) {
+                    // Hide the progress dialog
+                    // START
+                    hideProgressDialog() // Hides the progress dialog
+                    // END
                     Log.e("Error Failure", t!!.message.toString())
                 }
             })
@@ -231,4 +243,30 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    // TODO (STEP 5: Create a functions for SHOW and HIDE progress dialog.)
+    // START
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(this)
+
+        /*Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen.*/
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+
+        //Start the dialog and display it on screen.
+        mProgressDialog!!.show()
+    }
+
+    /**
+     * This function is used to dismiss the progress dialog if it is visible to user.
+     */
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
+    }
+    // END
 }
