@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -15,15 +16,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.weatherapp.models.WeatherResponse
+import com.example.weatherapp.network.WeatherService
 import com.google.android.gms.location.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import retrofit.GsonConverterFactory
+import retrofit.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var mProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,7 +150,8 @@ class MainActivity : AppCompatActivity() {
             val longitude = mLastLocation.longitude
             Log.i("Current Longitude", "$longitude")
 
-            getLocationWeatherDetails()
+            // Pass the latitude and longitude as parameters in function
+            getLocationWeatherDetails(latitude, longitude)
         }
     }
 
@@ -153,9 +160,75 @@ class MainActivity : AppCompatActivity() {
      * Check connection
      * Call the API to get the weather based on location
      */
-    private fun getLocationWeatherDetails() {
+    private fun getLocationWeatherDetails(latitude: Double, longitude: Double) {
         if (Constant.isNetworkAvailable(this)) {
             showToastText("You have connected to the internet.")
+            val retrofit: Retrofit = Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                /** Add converter factory for serialization and deserialization of objects. */
+                /**
+                 * Create an instance using a default {@link Gson} instance for conversion. Encoding to JSON and
+                 * decoding from JSON (when no charset is specified by a header) will use UTF-8.
+                 */
+                .addConverterFactory(GsonConverterFactory.create())
+                /** Create the Retrofit instances. */
+                .build()
+
+            // Further step for API call
+            // START
+            /**
+             * Here we map the service interface in which we declares the end point and the API type
+             *i.e GET, POST and so on along with the request parameter which are required.
+             */
+            val service: WeatherService = retrofit.create<WeatherService>(
+                WeatherService::class.java
+            )
+
+            /** An invocation of a Retrofit method that sends a request to a web-server and returns a response.
+             * Here we pass the required param in the service
+             */
+            val listCall: Call<WeatherResponse> = service.getWeather(
+                latitude, longitude, Constant.METRIC_UNIT, Constant.APP_ID
+            )
+
+            // Show the progress dialog
+            // START
+            showCustomProgressDialog() // Used to show the progress dialog
+            // END
+
+            // Callback methods are executed using the Retrofit callback executor.
+            listCall.enqueue(object: Callback<WeatherResponse>{
+                override fun onResponse(response: Response<WeatherResponse>?, retrofit: Retrofit?) {
+                    // Check weather the response is success or not.
+                    if(response!!.isSuccess){
+                        hideProgressDialog()
+                        /** The de-serialized response body of a successful response. */
+                        val weatherList: WeatherResponse = response.body()
+                        Log.i("Response result ", "${weatherList}")
+                    } else {
+                        // If the response is not success then we check the response code.
+                        when(response.code()) {
+                            400 -> {
+                                Log.e("Eror 400", "Bad Connection")
+                            }
+                            404 -> {
+                                Log.e("Error 404", "Not Found")
+                            }
+                            else -> {
+                                Log.e("Error ", "Generic Error")
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(t: Throwable?) {
+                    // Hide the progress dialog
+                    // START
+                    hideProgressDialog() // Hides the progress dialog
+                    // END
+                    Log.e("Error Failure", t!!.message.toString())
+                }
+            })
         } else {
             showToastText("No internet connection available.")
         }
@@ -170,4 +243,30 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    // TODO (STEP 5: Create a functions for SHOW and HIDE progress dialog.)
+    // START
+    /**
+     * Method is used to show the Custom Progress Dialog.
+     */
+    private fun showCustomProgressDialog() {
+        mProgressDialog = Dialog(this)
+
+        /*Set the screen content from a layout resource.
+        The resource will be inflated, adding all top-level views to the screen.*/
+        mProgressDialog!!.setContentView(R.layout.dialog_custom_progress)
+
+        //Start the dialog and display it on screen.
+        mProgressDialog!!.show()
+    }
+
+    /**
+     * This function is used to dismiss the progress dialog if it is visible to user.
+     */
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog!!.dismiss()
+        }
+    }
+    // END
 }
