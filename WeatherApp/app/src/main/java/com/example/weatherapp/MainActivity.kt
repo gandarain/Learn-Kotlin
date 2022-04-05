@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -151,10 +153,8 @@ class MainActivity : AppCompatActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location = locationResult.lastLocation
             val latitude = mLastLocation.latitude
-            Log.i("Current Latitude", "$latitude")
 
             val longitude = mLastLocation.longitude
-            Log.i("Current Longitude", "$longitude")
 
             // Pass the latitude and longitude as parameters in function
             getLocationWeatherDetails(latitude, longitude)
@@ -199,7 +199,8 @@ class MainActivity : AppCompatActivity() {
 
             // Show the progress dialog
             // START
-            showCustomProgressDialog() // Used to show the progress dialog
+            // Used to show the progress dialog
+            showCustomProgressDialog()
             // END
 
             // Callback methods are executed using the Retrofit callback executor.
@@ -337,5 +338,20 @@ class MainActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("HH:mm", Locale.UK)
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_refresh -> {
+                requestLocationData()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
