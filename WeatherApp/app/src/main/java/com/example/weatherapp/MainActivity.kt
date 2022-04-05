@@ -28,6 +28,8 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import retrofit.GsonConverterFactory
 import retrofit.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
@@ -280,6 +282,17 @@ class MainActivity : AppCompatActivity() {
             binding?.tvMain?.text = weatherList.weather[i].main
             binding?.tvMainDescription?.text = weatherList.weather[i].description
             binding?.tvTemp?.text = weatherList.main.temp.toString() + getUnit(getLocale())
+
+            binding?.tvSunriseTime?.text = unitTime(weatherList.sys.sunrise)
+            binding?.tvSunsetTime?.text = unitTime(weatherList.sys.sunset)
+
+            binding?.tvMax?.text = weatherList.main.temp_max.toString()
+            binding?.tvMin?.text = weatherList.main.temp_min.toString()
+
+            binding?.tvHumidity?.text = weatherList.main.humidity.toString() + " per cent"
+            binding?.tvSpeed?.text = weatherList.wind.speed.toString()
+            binding?.tvName?.text = weatherList.name
+            binding?.tvCountry?.text = weatherList.sys.country
         }
     }
 
@@ -298,5 +311,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             applicationContext.getResources().getConfiguration().locale.toString()
         }
+    }
+
+    private fun unitTime(timex: Long): String? {
+        val date = Date(timex * 1000L)
+        val sdf = SimpleDateFormat("HH:mm", Locale.UK)
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(date)
     }
 }
