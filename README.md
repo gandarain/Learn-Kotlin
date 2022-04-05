@@ -14,3 +14,6 @@
 
 ### Workout App
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/27923352/157050877-73b0bca7-93b9-4025-8e58-895e8a707834.gif)
+
+### Weather App
+![weather_app](https://user-images.githubusercontent.com/27923352/161792504-630aea6f-5a46-46f2-8d65-67c9903ec678.gif)
