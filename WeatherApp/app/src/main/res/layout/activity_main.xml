@@ -328,6 +328,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/secondary_text_color"
                         android:textSize="@dimen/value_text_size"
+                        android:gravity="center"
                         tools:text="Sunrise" />
                 </LinearLayout>
 
@@ -351,6 +352,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/secondary_text_color"
                         android:textSize="@dimen/value_text_size"
+                        android:gravity="center"
                         tools:text="Sunset" />
                 </LinearLayout>
             </LinearLayout>
