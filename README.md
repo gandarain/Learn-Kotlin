@@ -17,3 +17,11 @@
 
 ### Weather App
 ![weather_app](https://user-images.githubusercontent.com/27923352/161792504-630aea6f-5a46-46f2-8d65-67c9903ec678.gif)
+
+### Bottom Tab Navigation
+Resource <br/>
+https://www.youtube.com/watch?v=obYxPd2ot7Q&t=17s&ab_channel=CodeWithCal
+
+![bottom-tab](https://user-images.githubusercontent.com/27923352/164033303-9deb347c-6349-4ded-9a6c-dc2233e2a726.gif)
+
+
